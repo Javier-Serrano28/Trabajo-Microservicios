@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard — Reservas & Facturación</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand">Reservas & Facturación</div>
+    <nav>
+      <button class="nav-btn" data-target="panel-users">Usuarios</button>
+      <button class="nav-btn" data-target="panel-invoices">Facturación</button>
+      <button class="nav-btn" data-target="panel-payments">Pagos</button>
+      <button class="nav-btn" data-target="panel-notifs">Notificaciones</button>
+    </nav>
+    <div class="sidebar-footer">Demo • APIs públicas</div>
+  </aside>
+
+  <header class="topbar">
+    <div class="search">
+      <input id="searchInput" placeholder="Buscar usuario por nombre..." />
+      <button id="btnSearch">Buscar</button>
+    </div>
+    <div class="actions">
+      <button id="btnRefresh">Refrescar todo</button>
+    </div>
+  </header>
+
+  <main class="main">
+    <!-- Users panel -->
+    <section id="panel-users" class="panel active">
+      <h2>Usuarios (jsonplaceholder)</h2>
+      <div class="controls">
+        <button id="loadUsers" class="primary">Cargar usuarios</button>
+      </div>
+      <div id="usersContainer" class="cards-grid"></div>
+    </section>
+
+    <!-- Invoices / Facturación -->
+    <section id="panel-invoices" class="panel">
+      <h2>Facturación (FakeStore)</h2>
+      <div class="controls">
+        <button id="loadProducts" class="primary">Cargar productos (para facturas)</button>
+      </div>
+      <div id="invoicesContainer" class="table-wrap"></div>
+    </section>
+
+    <!-- Payments -->
+    <section id="panel-payments" class="panel">
+      <h2>Pagos (simulado)</h2>
+      <div class="controls">
+        <label>Monto: <input id="payAmount" type="number" value="100" /></label>
+        <label>Método:
+          <select id="payMethod">
+            <option value="card">Tarjeta</option>
+            <option value="paypal">PayPal</option>
+          </select>
+        </label>
+        <button id="processPayment" class="primary">Procesar pago (simulado)</button>
+      </div>
+      <div id="paymentsLog" class="log"></div>
+    </section>
+
+    <!-- Notifications -->
+    <section id="panel-notifs" class="panel">
+      <h2>Notificaciones (Observer local)</h2>
+      <div class="controls">
+        <button id="subscribeNotif">Suscribir listener</button>
+        <button id="emitNotif">Emitir notificación</button>
+      </div>
+      <div id="notifLog" class="log"></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
