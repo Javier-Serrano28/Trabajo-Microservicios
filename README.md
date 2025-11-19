@@ -1,10 +1,10 @@
 # Trabajo-Microservicios
 
-# 🧩 Sistema de Reservas y Facturación — Microservicios + APIs Externas
+# Sistema de Reservas y Facturación — Microservicios + APIs Externas
 
 Proyecto académico que implementa un sistema web basado en microservicios, integrando múltiples APIs externas reales, patrones de diseño y un dashboard profesional.
 
-## 🚀 Tecnologías utilizadas
+## Tecnologías utilizadas
 
 HTML5 + CSS3 + JavaScript (Vanilla)
 
@@ -28,7 +28,7 @@ Observador (Observer)
 
 Fachada (Facade)
 
-## 🎯 Objetivo del proyecto
+## Objetivo del proyecto
 
 Diseñar e implementar una solución web basada en microservicios que permita:
 
@@ -44,8 +44,8 @@ Integrar APIs reales
 
 Mostrar todo en un dashboard moderno
 
-## 🧱 Arquitectura general del proyecto
-📁 proyecto/
+## Arquitectura general del proyecto
+   proyecto/
 │── index.html
 │── styles.css
 │── app.js
@@ -96,7 +96,7 @@ POST simulado a un endpoint real
 
 Sistema de subscripción de listeners
 
-## 🎨 Dashboard Profesional
+##  Dashboard Profesional
 
 El dashboard incluye:
 
@@ -114,7 +114,7 @@ Modo oscuro moderno
 
 Tipografía tipo dashboard SaaS
 
-## 📁 Archivos del proyecto
+##  Archivos del proyecto
 ✔ index.html
 
 Interfaz principal, contiene:
@@ -157,8 +157,8 @@ Simulación de notificaciones
 
 Buscador por nombre
 
-## 🧠 Patrones de diseño aplicados
-### 1️⃣ Singleton (CONFIG global)
+##  Patrones de diseño aplicados
+###  Singleton (CONFIG global)
 
 Se usa para manejar las URLs de los microservicios desde un solo punto:
 
@@ -171,13 +171,13 @@ const CONFIG = {
 
 Evita duplicar rutas → mantenimiento más limpio.
 
-### 2️⃣ Módulo (Funciones encapsuladas)
+###  Módulo (Funciones encapsuladas)
 
 Ejemplo: renderUsers(), processPayment(), sendNotification()
 
 Cada microservicio está modularizado → mayor escalabilidad.
 
-### 3️⃣ Observer (Notificaciones)
+###  Observer (Notificaciones)
 
 Suscripción de listeners sin acoplamiento:
 
@@ -194,7 +194,7 @@ Registrar pagos exitosos
 
 Mostrar logs
 
-### 4️⃣ Fachada (Facade)
+###  Fachada (Facade)
 
 Una sola función simplifica el envío de notificaciones:
 
@@ -211,13 +211,13 @@ notifyUser(user);
 
 Ocultando detalles internos → código más claro.
 
-## 🔌 APIs Externas Integradas
+##  APIs Externas Integradas
 Microservicio	API real	Descripción
 Usuarios	jsonplaceholder.typicode.com/users	Lista de usuarios reales simulados
 Facturación	fakestoreapi.com/products	Productos para simular ítems facturados
 Pagos	jsonplaceholder.typicode.com/posts	Endpoint que recibe POST para simular pagos
 Notificaciones	jsonplaceholder.typicode.com/posts	Usado para simular envío de notificaciones
-## 🖥️ Vista previa del dashboard
+##  Vista previa del dashboard
 
 (Coloca la imagen que generaste usando:)
 /mnt/data/60d5fc95-5a29-4ad7-9932-29bfd39aa37b.png
@@ -233,7 +233,7 @@ Abre index.html en tu navegador.
 
 No se requiere servidor porque las APIs son públicas.
 
-## 🧪 Pruebas rápidas
+##  Pruebas rápidas
 ✔ Cargar usuarios
 
 Botón: "Cargar usuarios"
@@ -252,7 +252,7 @@ Suscribir listener
 
 Emitir notificación
 
-## 📦 Mejoras futuras (opcional para tu entrega)
+##  Mejoras futuras (opcional para tu entrega)
 
 Integración con EmailJS para notificaciones reales
 
@@ -263,12 +263,3 @@ Sistema de reservas con calendario
 Login / autenticación JWT
 
 Microservicios reales con backend en Node.js / Spring Boot
-
-## 👨‍💻 Autor
-
-Tu nombre
-Proyecto universitario — Ingeniería de Sistemas
-
-## 📜 Licencia
-
-MIT — Uso libre con atribución.
