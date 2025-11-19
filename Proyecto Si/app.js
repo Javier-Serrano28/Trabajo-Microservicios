@@ -14,6 +14,22 @@ const qs = sel => document.querySelector(sel);
 const qsa = sel => document.querySelectorAll(sel);
 
 /* -------------------------
+   Toast Notifications
+   ------------------------- */
+function showToast(msg, type = 'info') {
+  const container = $('toast-container');
+  if (!container) return;
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `<span>${msg}</span>`;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+
+/* -------------------------
    Navegación lateral
    ------------------------- */
 qsa('.nav-btn').forEach(btn => {
@@ -29,15 +45,15 @@ qsa('.nav-btn').forEach(btn => {
    ------------------------- */
 let usersCache = [];
 const listeners = [];
-function subscribe(fn){ listeners.push(fn); }
-function emit(event, payload){ listeners.forEach(fn => { try { fn(event, payload); } catch(e){} }); }
+function subscribe(fn) { listeners.push(fn); }
+function emit(event, payload) { listeners.forEach(fn => { try { fn(event, payload); } catch (e) { } }); }
 
 /* -------------------------
    Cargar usuarios (jsonplaceholder)
    ------------------------- */
 $('loadUsers').addEventListener('click', async () => {
   const c = $('usersContainer');
-  c.innerHTML = 'Cargando usuarios...';
+  c.innerHTML = '<div class="spinner"></div> Cargando usuarios...';
   try {
     const res = await fetch(CONFIG.USERS);
     const data = await res.json();
@@ -45,13 +61,14 @@ $('loadUsers').addEventListener('click', async () => {
     renderUsers(data);
   } catch (e) {
     c.innerHTML = 'Error cargando usuarios: ' + e.message;
+    showToast('Error cargando usuarios', 'error');
   }
 });
 
-function renderUsers(list){
+function renderUsers(list) {
   const c = $('usersContainer');
   c.innerHTML = '';
-  if(!list.length){ c.innerHTML = '<div>No hay usuarios</div>'; return; }
+  if (!list.length) { c.innerHTML = '<div>No hay usuarios</div>'; return; }
   list.forEach(u => {
     const card = document.createElement('div');
     card.className = 'card-user';
@@ -75,9 +92,9 @@ function renderUsers(list){
       const id = b.dataset.id;
       const action = b.dataset.action;
       const user = usersCache.find(x => String(x.id) === String(id));
-      if(action === 'invoice') await createInvoiceForUser(user);
-      if(action === 'pay') await processPaymentForUser(user);
-      if(action === 'notify') await notifyUser(user);
+      if (action === 'invoice') await createInvoiceForUser(user);
+      if (action === 'pay') await processPaymentForUser(user);
+      if (action === 'notify') await notifyUser(user);
     });
   });
 }
@@ -87,12 +104,12 @@ function renderUsers(list){
    ------------------------- */
 $('loadProducts').addEventListener('click', async () => {
   const wrap = $('invoicesContainer');
-  wrap.innerHTML = 'Cargando productos...';
+  wrap.innerHTML = '<div class="spinner"></div> Cargando productos...';
   try {
     const res = await fetch(CONFIG.PRODUCTS);
     const data = await res.json();
     // Generar tabla de productos (se usan como items para facturas)
-    const cols = ['ID','Título','Precio','Categoría'];
+    const cols = ['ID', 'Título', 'Precio', 'Categoría'];
     let html = `<div class="table-wrap"><table class="table"><thead><tr>`;
     cols.forEach(h => html += `<th>${h}</th>`);
     html += `</tr></thead><tbody>`;
@@ -108,6 +125,7 @@ $('loadProducts').addEventListener('click', async () => {
     wrap.innerHTML = html;
   } catch (e) {
     wrap.innerHTML = 'Error cargando productos: ' + e.message;
+    showToast('Error cargando productos', 'error');
   }
 });
 
@@ -117,33 +135,41 @@ $('loadProducts').addEventListener('click', async () => {
 $('processPayment').addEventListener('click', async () => {
   const amount = Number($('payAmount').value || 0);
   const method = $('payMethod').value;
-  await processPayment({amount, method, source: 'dashboard_manual'});
+
+  if (amount <= 0) {
+    showToast('El monto debe ser mayor a 0', 'error');
+    return;
+  }
+
+  await processPayment({ amount, method, source: 'dashboard_manual' });
 });
 
-async function processPaymentForUser(user){
+async function processPaymentForUser(user) {
   // ejemplo: pagar monto aleatorio
-  const amount = Math.floor(Math.random()*200)+20;
-  await processPayment({amount, method:'card', user});
+  const amount = Math.floor(Math.random() * 200) + 20;
+  await processPayment({ amount, method: 'card', user });
 }
 
-async function processPayment(payload){
+async function processPayment(payload) {
   const log = $('paymentsLog');
-  const entry = {time: new Date().toISOString(), payload};
+  const entry = { time: new Date().toISOString(), payload };
   log.innerHTML = `Procesando pago...`;
   try {
     const res = await fetch(CONFIG.PAY_ENDPOINT, {
       method: 'POST',
-      headers: {'Content-Type':'application/json'},
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
     const data = await res.json();
     const msg = `Pago simulado OK — id: ${data.id ?? '(simulado)'} — monto: ${payload.amount}`;
     log.innerHTML = `<div>${msg}</div>` + log.innerHTML;
-    emit('payment_success', {payload, response: data});
+    emit('payment_success', { payload, response: data });
+    showToast('Pago realizado con éxito', 'success');
     return data;
   } catch (e) {
     log.innerHTML = `<div>Error procesando pago: ${e.message}</div>` + log.innerHTML;
-    emit('payment_error', {error:e.message});
+    emit('payment_error', { error: e.message });
+    showToast('Error al procesar pago', 'error');
     throw e;
   }
 }
@@ -161,28 +187,30 @@ $('subscribeNotif').addEventListener('click', () => {
 });
 
 $('emitNotif').addEventListener('click', async () => {
-  const sample = {msg:'Notificación manual desde dashboard', when: new Date().toISOString()};
+  const sample = { msg: 'Notificación manual desde dashboard', when: new Date().toISOString() };
   await sendNotification(sample);
 });
 
-async function notifyUser(user){
-  const payload = {to: user.email, userId: user.id, when: new Date().toISOString()};
+async function notifyUser(user) {
+  const payload = { to: user.email, userId: user.id, when: new Date().toISOString() };
   await sendNotification(payload);
 }
 
-async function sendNotification(payload){
+async function sendNotification(payload) {
   try {
-   
-    const res = await fetch(CONFIG.PAY_ENDPOINT, { 
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
+
+    const res = await fetch(CONFIG.PAY_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
     const data = await res.json();
-    emit('notification_sent', {payload, response: data});
+    emit('notification_sent', { payload, response: data });
+    showToast('Notificación enviada', 'success');
     return data;
   } catch (e) {
-    emit('notification_error', {error: e.message});
+    emit('notification_error', { error: e.message });
+    showToast('Error enviando notificación', 'error');
     throw e;
   }
 }
@@ -192,7 +220,7 @@ async function sendNotification(payload){
    ------------------------- */
 $('btnSearch').addEventListener('click', () => {
   const q = $('searchInput').value.trim().toLowerCase();
-  if(!q){ renderUsers(usersCache); return; }
+  if (!q) { renderUsers(usersCache); return; }
   const matches = usersCache.filter(u => (u.name || '').toLowerCase().includes(q));
   renderUsers(matches);
 });
@@ -201,9 +229,9 @@ $('btnSearch').addEventListener('click', () => {
    Refrescar todo
    ------------------------- */
 $('btnRefresh').addEventListener('click', () => {
-  
-  if(usersCache.length) renderUsers(usersCache);
- 
+
+  if (usersCache.length) renderUsers(usersCache);
+
   $('paymentsLog').innerHTML = '';
   $('notifLog').innerHTML = '';
 });
@@ -211,13 +239,13 @@ $('btnRefresh').addEventListener('click', () => {
 /* -------------------------
    Inicialización mínima: opción de precargar usuarios
    ------------------------- */
-(async function init(){
-  
+(async function init() {
+
   try {
     const res = await fetch(CONFIG.USERS);
     usersCache = await res.json();
-    renderUsers(usersCache.slice(0,8)); 
-  } catch(e){
+    renderUsers(usersCache.slice(0, 8));
+  } catch (e) {
     console.warn('No se pudieron precargar usuarios:', e.message);
   }
 })();
