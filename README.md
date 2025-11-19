@@ -222,7 +222,7 @@ Notificaciones	jsonplaceholder.typicode.com/posts	Usado para simular envío de n
 (Coloca la imagen que generaste usando:)
 /mnt/data/60d5fc95-5a29-4ad7-9932-29bfd39aa37b.png
 
-## 🏁 Cómo ejecutar el proyecto
+##  Cómo ejecutar el proyecto
 1. Clona el repositorio
 git clone https://github.com/tu-usuario/tu-repo.git
 cd tu-repo
@@ -251,15 +251,3 @@ Botón: "Procesar pago"
 Suscribir listener
 
 Emitir notificación
-
-##  Mejoras futuras (opcional para tu entrega)
-
-Integración con EmailJS para notificaciones reales
-
-Integración con Stripe/MercadoPago sandbox
-
-Sistema de reservas con calendario
-
-Login / autenticación JWT
-
-Microservicios reales con backend en Node.js / Spring Boot
