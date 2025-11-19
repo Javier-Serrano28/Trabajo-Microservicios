@@ -220,7 +220,7 @@ Notificaciones	jsonplaceholder.typicode.com/posts	Usado para simular envío de n
 ##  Vista previa del dashboard
 
 (Coloca la imagen que generaste usando:)
-/mnt/data/60d5fc95-5a29-4ad7-9932-29bfd39aa37b.png
+<img src="ejemplo.png" width="500">
 
 ##  Cómo ejecutar el proyecto
 1. Clona el repositorio
